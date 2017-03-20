@@ -15,14 +15,18 @@ struct Graph {
 	Graph(int vs) {
 		numOfVertices = vs;
 		distanceMatrix.resize(vs);
+		adjacencyMatrix.resize(vs);
 		for(int i = 0; i < vs; i++) {
 			distanceMatrix[i].resize(vs);
 			fill(distanceMatrix[i].begin(), distanceMatrix[i].end(), -1);
+			adjacencyMatrix[i].resize(vs);
+			fill(adjacencyMatrix[i].begin(), adjacencyMatrix[i].end(), 0);
 		}
 	}
 	int numOfVertices;
 	vector<Edge> edges;
 	vector< vector<int> > distanceMatrix;
+	vector< vector<int> > adjacencyMatrix;
 };
 
 // This will fill out the whole row for the given vertex
@@ -41,6 +45,10 @@ void BFS(Graph *g, int v) {
 			if (g->edges[i].v1 == s && visited[g->edges[i].v2] != true) {
 				int v2 = g->edges[i].v2;
 				g->distanceMatrix[v][v2] = g->distanceMatrix[v][s] + 1;
+				if(g->distanceMatrix[v][v2] == 1) {
+					g->adjacencyMatrix[v][v2] = 1;
+					g->adjacencyMatrix[v2][v] = 1;
+				}
 				q.push(v2);
 				visited[v2] = true;
 				//cout << "Distance between " << v << " and " << v2 << " is " << g->distanceMatrix[v][v2] << endl;
@@ -73,6 +81,15 @@ void printDistanceMatrix(Graph *g) {
 	for (int i = 0; i < g->numOfVertices; i++) {
 		for (int j = 0; j < g->numOfVertices; j++) {
 			cout << setw(3) << g->distanceMatrix[i][j] << "  ";
+		}
+		cout << endl;
+	}
+}
+
+void printAdjacencyMatrix(Graph *g) {
+	for (int i = 0; i < g->numOfVertices; i++) {
+		for (int j = 0; j < g->numOfVertices; j++) {
+			cout << setw(3) << g->adjacencyMatrix[i][j] << "  ";
 		}
 		cout << endl;
 	}
@@ -119,27 +136,37 @@ vector< vector <int> > Components(Graph *g) {
 
 int main() {
 	
-	/*Graph *g = new Graph(5);
+	Graph *g = new Graph(4);
 	g->edges.push_back(Edge(0, 1));
 	g->edges.push_back(Edge(0, 2));
 	g->edges.push_back(Edge(0, 3));
 	g->edges.push_back(Edge(2, 3));
-	g->edges.push_back(Edge(1, 3));*/
-	Graph *g = new Graph(6);
-	g->edges.push_back(Edge(0, 1));
+	g->edges.push_back(Edge(1, 3));
+	/*Graph *g = new Graph(6);
+	g->edges.push_back(Edge(0, 3));
 	g->edges.push_back(Edge(4, 2));
-	g->edges.push_back(Edge(2, 3));
-	g->edges.push_back(Edge(5, 3));
+	g->edges.push_back(Edge(2, 1));
+	g->edges.push_back(Edge(5, 1));*/
 	
-	cout << g->numOfVertices << " vertices" << endl;
+	/*cout << g->numOfVertices << " vertices" << endl;
 	for (int i = 0; i < g->edges.size(); i++) {
 		cout << g->edges[i].v1 << " to " << g->edges[i].v2 << endl;
 	}
 	
-	cout << "\n";
-	DistanceMatrix(g);
+	cout << "\n";*/
+	bool connected = DistanceMatrix(g);
 	
+	cout << "Adjacency Matrix:" << endl;
+	printAdjacencyMatrix(g);
+	
+	cout << "\nDistance Matrix:" << endl;
 	printDistanceMatrix(g);
+	
+	if (connected == true) {
+		cout << "\nDiameter: " << Diameter(g) << endl;
+	}
+	
+	cout << "\nConnected Components:" << endl;
 	
 	vector< vector<int> > answer = Components(g);
 	for (int i = 0; i < answer.size(); i++) {
