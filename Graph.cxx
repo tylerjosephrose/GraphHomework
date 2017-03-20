@@ -91,8 +91,30 @@ int Diameter(Graph *g) {
 	return max;
 }
 
-void Components(Graph *g) {
-	
+vector< vector <int> > Components(Graph *g) {
+	DistanceMatrix(g);
+	vector<bool> verticesUsed;
+	verticesUsed.resize(g->numOfVertices);
+	fill(verticesUsed.begin(), verticesUsed.end(), false);
+	vector< vector<int> > components;
+	// Loops through rows of distance matrix
+	for (int i = 0; i < g->numOfVertices; i++) {
+		vector<int> connectedVertices;
+		
+		if (verticesUsed[i] == false) {
+			
+			// Loops through elements in the row
+			for (int j = 0; j < g->numOfVertices; j++) {
+				// Checks if the vertex of row i is connected to the vertex of row j
+				if (g->distanceMatrix[i][j] != -1) {
+					verticesUsed[j] = true;
+					connectedVertices.push_back(j);
+				}
+			}
+			components.push_back(connectedVertices);
+		}
+	}
+	return components;
 }
 
 int main() {
@@ -118,6 +140,14 @@ int main() {
 	DistanceMatrix(g);
 	
 	printDistanceMatrix(g);
+	
+	vector< vector<int> > answer = Components(g);
+	for (int i = 0; i < answer.size(); i++) {
+		for (int j = 0; j < answer[i].size(); j++) {
+			cout << setw(3) << answer[i][j] << "  ";
+		}
+		cout << endl;
+	}
 }
 
 
