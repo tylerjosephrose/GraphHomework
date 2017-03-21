@@ -2,7 +2,8 @@
 #include <iomanip>
 #include <vector>
 #include <queue>
-#include <algorithm>
+#include <cstring>
+
 
 using namespace std;
 
@@ -135,12 +136,6 @@ vector< vector <int> > Components(Graph *g) {
 	return components;
 }
 
-// utility function for parsing the input
-string removeSpaces(string input)
-{
-  input.erase(remove(input.begin(),input.end(),' '),input.end());
-  return input;
-}
 
 int main() {
     //gather user input
@@ -166,14 +161,13 @@ int main() {
 	
 	Graph *g = new Graph(input_vector[0]);
 	for (int i = 1; i < input_vector.size() - 1; i = i + 2) {
-		cout << "here" << endl;
 		g->edges.push_back(Edge(input_vector[i], input_vector[i + 1]));
 	}
 	
 	cout << "Data Made from input" << endl;
 	
     cout << "\n" <<g->numOfVertices << " vertices" << endl;
-	for (int i = 0; i < g->edges.size() - 1; i++) {
+	for (int i = 0; i < g->edges.size(); i++) {
 		cout << g->edges[i].v1 << " to " << g->edges[i].v2 << endl;
 	}   
     
@@ -201,11 +195,7 @@ int main() {
 		cout << endl;
 	}  
     
-    /*if(bad_vertex)
-    {
-        cout << "One or more of your verticies were not plotted because they were out of bounds" << endl;
-    }*/
-    
+
 }
 
 
