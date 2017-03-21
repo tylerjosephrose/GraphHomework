@@ -143,50 +143,37 @@ string removeSpaces(string input)
 }
 
 int main() {
-	
-	/*Graph *g = new Graph(4);
-	g->edges.push_back(Edge(0, 1));
-	g->edges.push_back(Edge(0, 2));
-	g->edges.push_back(Edge(0, 3));
-	g->edges.push_back(Edge(2, 3));
-	g->edges.push_back(Edge(1, 3));*/
-	/*Graph *g = new Graph(6);
-	g->edges.push_back(Edge(0, 3));
-	g->edges.push_back(Edge(4, 2));
-	g->edges.push_back(Edge(2, 1));
-	g->edges.push_back(Edge(5, 1));*/
-	
-    
     //gather user input
-    cout << "\n Please Input your graph. Use the first number in the input to signify\n the size of the graph.  Use subsequent pairs to connect vertices with an edge.\n Example: 3 1 2 0 2 \n This is a graph with 3 vertices.  Node 1 is connected to\n node 2 and node 0 is connected to node 2.\n Input:";
+    cout << "\n Please Input your graph. Use the first number in the input to signify\n the size of the graph.  Use subsequent pairs to connect vertices with an edge.\n Example: 3 1 2 0 2 \n This is a graph with 3 vertices.  Node 1 is connected to\n node 2 and node 0 is connected to node 2.\n Input: ";
     string input_string;
     getline(cin, input_string);
-    input_string = removeSpaces(input_string);
     
     //parse string and set up graph
-    int size = input_string[0] - 48;
-    Graph *g = new Graph(size);
-
-    //skip first element because it is the size of the graph
-    int count = 1;
-    bool bad_vertex = false;
-    while(count < input_string.size())
-    {
-        int lhs = input_string[count] - 48;
-        int rhs = input_string[count+1] - 48;
-        if(!(lhs > size-1 || rhs > size-1))
-        {
-            g->edges.push_back(Edge(lhs, rhs));
-        }
-        else
-        {
-            bad_vertex = true;
-        }
-        count = count + 2;
-    }
-    
+	vector<int> input_vector;
+	
+	char * cstr = new char [input_string.length()+1];
+	std::strcpy (cstr, input_string.c_str());
+	
+	// cstr now contains a c-string copy of str
+	
+	char * p = std::strtok (cstr," ");
+	while (p!=0)
+	{
+		input_vector.push_back(stoi(p));
+		p = std::strtok(NULL," ");
+	}
+	delete[] cstr;
+	
+	Graph *g = new Graph(input_vector[0]);
+	for (int i = 1; i < input_vector.size() - 1; i = i + 2) {
+		cout << "here" << endl;
+		g->edges.push_back(Edge(input_vector[i], input_vector[i + 1]));
+	}
+	
+	cout << "Data Made from input" << endl;
+	
     cout << "\n" <<g->numOfVertices << " vertices" << endl;
-	for (int i = 0; i < g->edges.size(); i++) {
+	for (int i = 0; i < g->edges.size() - 1; i++) {
 		cout << g->edges[i].v1 << " to " << g->edges[i].v2 << endl;
 	}   
     
@@ -214,10 +201,10 @@ int main() {
 		cout << endl;
 	}  
     
-    if(bad_vertex)
+    /*if(bad_vertex)
     {
         cout << "One or more of your verticies were not plotted because they were out of bounds" << endl;
-    }
+    }*/
     
 }
 
